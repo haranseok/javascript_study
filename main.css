@@ -121,7 +121,7 @@ body {
   scroll-snap-align: start;
 }
 
-.timeline ol li:not(:last-child)::after {
+.timeline ol li::after {
   position: absolute;
   top: 50%;
   left: -8px;
@@ -133,8 +133,13 @@ body {
   background: var(--midnight-green);
 }
 
+.timeline ol li:last-child {
+  width: 400px;
+}
+
 .timeline ol li div {
   position: absolute;
+  left: 100%;
   width: 320px;
   padding: 15px;
   font-size: 1rem;
