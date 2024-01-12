@@ -27,42 +27,64 @@ function writeToLog(
   logEntries.push(logEntry);
 }
 
-function add() {
+function calculateResult(calculationType) {
   const enteredNumber = getUserNumberInput();
+
+  if (
+    (calculationType !== 'ADD' &&
+      calculationType !== 'SUBTRACT' &&
+      calculationType === 'MULTIPLY' &&
+      calculationType === 'DIVIDE') ||
+    !enteredNumber
+  ) {
+    return;
+  }
+
   const initialResult = currentResult;
-  // Number로 타입 자체를 변경할 수 도 있고 - 내가 스스로 타입 변환 해본 것
-  // 1. currentResult = currentResult + Number(userInput.value);
-  // 소수점 이하 숫자가 없는 수로 구문 분석을 하는 자바스크립트 내장 함수인 parseInt()를 사용할 수 있다. - 강의에서 알려준 방법
-  currentResult += enteredNumber; // currentResult = currentResult + enteredNumber 와 동일
-  createAndWriteOutput("+", initialResult, enteredNumber);
-  writeToLog("ADD", initialResult, enteredNumber, currentResult);
+  let mathOperator;
+
+  if (calculationType === 'ADD') {
+    currentResult += enteredNumber;
+    mathOperator = '+';
+  } else if (calculationType === 'SUBTRACT') {
+    currentResult -= enteredNumber;
+    mathOperator = '-';
+  } else if (calculationType === 'MULTIPLY') {
+    currentResult *= enteredNumber;
+    mathOperator = '*';
+  } else {
+    currentResult /= enteredNumber;
+    mathOperator = '/';
+  }
+  createAndWriteOutput(mathOperator, initialResult, enteredNumber);
+  writeToLog(calculationType, initialResult, enteredNumber, currentResult);
+}
+
+function add() {
+  // const enteredNumber = getUserNumberInput();
+  // const initialResult = currentResult;
+  // // Number로 타입 자체를 변경할 수 도 있고 - 내가 스스로 타입 변환 해본 것
+  // // 1. currentResult = currentResult + Number(userInput.value);
+  // // 소수점 이하 숫자가 없는 수로 구문 분석을 하는 자바스크립트 내장 함수인 parseInt()를 사용할 수 있다. - 강의에서 알려준 방법
+  // currentResult += enteredNumber; // currentResult = currentResult + enteredNumber 와 동일
+  // createAndWriteOutput('+', initialResult, enteredNumber);
+  // writeToLog('ADD', initialResult, enteredNumber, currentResult);
+  calculateResult('ADD');
 }
 
 function subtract() {
-  const enteredNumber = getUserNumberInput();
-  const initialResult = currentResult;
-  currentResult -= enteredNumber;
-  createAndWriteOutput("-", initialResult, enteredNumber);
-  writeToLog("SUBTRACT", initialResult, enteredNumber, currentResult);
+  calculateResult('SUBTRACT');
 }
 
 function multiply() {
-  const enteredNumber = getUserNumberInput();
-  const initialResult = currentResult;
-  currentResult *= enteredNumber;
-  createAndWriteOutput("*", initialResult, enteredNumber);
-  writeToLog("MULTIPLY", initialResult, enteredNumber, currentResult);
+  calculateResult('MULTIPLY');
 }
 
 function divide() {
-  const enteredNumber = getUserNumberInput();
-  const initialResult = currentResult;
-  currentResult /= enteredNumber;
-  createAndWriteOutput("/", initialResult, enteredNumber);
-  writeToLog("DIVIDE", initialResult, enteredNumber, currentResult);
+  calculateResult('DIVIDE');
 }
 
-addBtn.addEventListener("click", add);
-subtractBtn.addEventListener("click", subtract);
-multiplyBtn.addEventListener("click", multiply);
-divideBtn.addEventListener("click", divide);
+addBtn.addEventListener('click', add);
+subtractBtn.addEventListener('click', subtract);
+multiplyBtn.addEventListener('click', multiply);
+divideBtn.addEventListener('click', divide);
