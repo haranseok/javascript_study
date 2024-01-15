@@ -5,29 +5,61 @@ const STRONG_ATTACK_VALUE = 17;
 const MONSTER_ATTACK_VALUE = 14;
 const HEAL_VALUE = 20;
 
-let chosenMaxLife = 100;
+const enterdValue = prompt("Maxinum life for you and the monster.", "100");
+
+let chosenMaxLife = parseInt(enterdValue);
+
+//OR 연산자의 경우 첫번째 조건이 참이면 멈추고 조건문 안의 내용을 실행한다.
+
+if (isNaN(chosenMaxLife) || chosenMaxLife <= 0) {
+  chosenMaxLife = 100;
+}
+
 let currentMonsterHealth = chosenMaxLife;
 let currentPlayerHealth = chosenMaxLife;
+let hasBonusLife = true;
 
 adjustHealthBars(chosenMaxLife);
 
+function reset() {
+  currentMonsterHealth = chosenMaxLife;
+  currentPlayerHealth = chosenMaxLife;
+  resetGame(chosenMaxLife);
+}
+
 function endRound() {
+  const initialPlayerHealth = currentPlayerHealth;
   const playerDamage = dealPlayerDamage(MONSTER_ATTACK_VALUE);
   currentPlayerHealth -= playerDamage;
+
+  if (currentPlayerHealth <= 0 && hasBonusLife) {
+    hasBonusLife = false;
+    removeBonusLife();
+    currentPlayerHealth = initialPlayerHealth;
+    setPlayerHealth(initialPlayerHealth);
+    alert("You would be dead but the bonus life saved you!");
+  }
+
   if (currentMonsterHealth <= 0 && currentPlayerHealth > 0) {
-    alert('You won!');
+    alert("You won!");
   } else if (currentPlayerHealth <= 0 && currentMonsterHealth > 0) {
-    alert('You lost!');
+    alert("You lost!");
   } else if (currentPlayerHealth <= 0 && currentMonsterHealth <= 0) {
-    alert('You have a draw!');
+    alert("You have a draw!");
+  }
+
+  // 위 if문에 reset() 함수를 세번 호출하는 것보다 아래 코드처럼 작성하는 것이 낫다.
+
+  if (currentMonsterHealth <= 0 || currentPlayerHealth <= 0) {
+    reset();
   }
 }
 
 function attackMonster(mode) {
   let maxDamage;
-  if (mode === 'ATTACK') {
+  if (mode === "ATTACK") {
     maxDamage = ATTACK_VALUE;
-  } else if (mode === 'STRONG_ATTACK') {
+  } else if (mode === "STRONG_ATTACK") {
     maxDamage = STRONG_ATTACK_VALUE;
   }
   const damage = dealMonsterDamage(maxDamage);
@@ -36,11 +68,11 @@ function attackMonster(mode) {
 }
 
 function attackHandler() {
-  attackMonster('ATTACK');
+  attackMonster("ATTACK");
 }
 
 function strongAttackHandler() {
-  attackMonster('STRONG_ATTACK');
+  attackMonster("STRONG_ATTACK");
 }
 
 function healPlayerHandler() {
@@ -57,6 +89,6 @@ function healPlayerHandler() {
   endRound();
 }
 
-attackBtn.addEventListener('click', attackHandler);
-strongAttackBtn.addEventListener('click', strongAttackHandler);
-healBtn.addEventListener('click', healPlayerHandler);
+attackBtn.addEventListener("click", attackHandler);
+strongAttackBtn.addEventListener("click", strongAttackHandler);
+healBtn.addEventListener("click", healPlayerHandler);
