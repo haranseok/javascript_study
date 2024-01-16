@@ -5,24 +5,41 @@ const STRONG_ATTACK_VALUE = 17;
 const MONSTER_ATTACK_VALUE = 14;
 const HEAL_VALUE = 20;
 
-const MODE_ATTACT = "ATTACK"; // MODE_ATTACT = 0
-const MODE_STRONG_ATTACT = "STRONG_ATTACT"; // MODE_STRONG_ATTACT = 1
-const LOG_EVENT_PLAYER_ATTACK = "PLAYER_ATTACT";
-const LOG_EVENT_PLAYER_STRONG_ATTACK = "PLAYER_STRONG_ATTACK";
-const LOG_EVENT_MONSTER_ATTACK = "MONSTER_ATTACT";
-const LOG_EVENT_PLAYER_HEAL = "PLAYER_HEAL";
-const LOG_EVENT_GAME_OVER = "GAME_OVER";
+const MODE_ATTACT = 'ATTACK'; // MODE_ATTACT = 0
+const MODE_STRONG_ATTACT = 'STRONG_ATTACT'; // MODE_STRONG_ATTACT = 1
+const LOG_EVENT_PLAYER_ATTACK = 'PLAYER_ATTACT';
+const LOG_EVENT_PLAYER_STRONG_ATTACK = 'PLAYER_STRONG_ATTACK';
+const LOG_EVENT_MONSTER_ATTACK = 'MONSTER_ATTACT';
+const LOG_EVENT_PLAYER_HEAL = 'PLAYER_HEAL';
+const LOG_EVENT_GAME_OVER = 'GAME_OVER';
 
-const enterdValue = prompt("Maxinum life for you and the monster.", "100");
-
-let chosenMaxLife = parseInt(enterdValue);
 let battleLog = [];
+let lastLoggedEntry;
 
-//OR 연산자의 경우 첫번째 조건이 참이면 멈추고 조건문 안의 내용을 실행한다.
+function getMaxLifeValues() {
+  const enterdValue = prompt('Maxinum life for you and the monster.', '100');
 
-if (isNaN(chosenMaxLife) || chosenMaxLife <= 0) {
+  const parsedValue = parseInt(enterdValue);
+  //OR 연산자의 경우 첫번째 조건이 참이면 멈추고 조건문 안의 내용을 실행한다.
+  if (isNaN(parsedValue) || parsedValue <= 0) {
+    throw { message: 'Invalid user input, not a number!' };
+  }
+  return parsedValue;
+}
+
+let chosenMaxLife;
+
+try {
+  chosenMaxLife = getMaxLifeValues();
+} catch (e) {
+  alert(e.message);
   chosenMaxLife = 100;
 }
+// finally {
+//   // 오류가 있던 없던 실행된다.
+//   // 오류 재발행을 하게 되는 경우에 사용한다.(?)
+//   // 대부분의 경우에서는 거의 필요하지 않다.
+//  }
 
 let currentMonsterHealth = chosenMaxLife;
 let currentPlayerHealth = chosenMaxLife;
@@ -42,13 +59,13 @@ function writeToLog(ev, val, monsterHealth, playerHealth) {
 
   switch (ev) {
     case LOG_EVENT_PLAYER_ATTACK:
-      logEntry.target = "MONSTER";
+      logEntry.target = 'MONSTER';
       break;
     case LOG_EVENT_PLAYER_STRONG_ATTACK:
       logEntry = {
         event: ev,
         value: val,
-        target: "MONSTER",
+        target: 'MONSTER',
         finalMonsterHealth: monsterHealth,
         finalPlayerHealth: playerHealth,
       };
@@ -57,7 +74,7 @@ function writeToLog(ev, val, monsterHealth, playerHealth) {
       logEntry = {
         event: ev,
         value: val,
-        target: "PLAYER",
+        target: 'PLAYER',
         finalMonsterHealth: monsterHealth,
         finalPlayerHealth: playerHealth,
       };
@@ -66,7 +83,7 @@ function writeToLog(ev, val, monsterHealth, playerHealth) {
       logEntry = {
         event: ev,
         value: val,
-        target: "PLAYER",
+        target: 'PLAYER',
         finalMonsterHealth: monsterHealth,
         finalPlayerHealth: playerHealth,
       };
@@ -142,30 +159,30 @@ function endRound() {
     removeBonusLife();
     currentPlayerHealth = initialPlayerHealth;
     setPlayerHealth(initialPlayerHealth);
-    alert("You would be dead but the bonus life saved you!");
+    alert('You would be dead but the bonus life saved you!');
   }
 
   if (currentMonsterHealth <= 0 && currentPlayerHealth > 0) {
-    alert("You won!");
+    alert('You won!');
     writeToLog(
       LOG_EVENT_GAME_OVER,
-      "PLAYER WON!",
+      'PLAYER WON!',
       currentMonsterHealth,
       currentPlayerHealth
     );
   } else if (currentPlayerHealth <= 0 && currentMonsterHealth > 0) {
-    alert("You lost!");
+    alert('You lost!');
     writeToLog(
       LOG_EVENT_GAME_OVER,
-      "MONSTER WON!",
+      'MONSTER WON!',
       currentMonsterHealth,
       currentPlayerHealth
     );
   } else if (currentPlayerHealth <= 0 && currentMonsterHealth <= 0) {
-    alert("You have a draw!");
+    alert('You have a draw!');
     writeToLog(
       LOG_EVENT_GAME_OVER,
-      "A DRAW!",
+      'A DRAW!',
       currentMonsterHealth,
       currentPlayerHealth
     );
@@ -229,19 +246,21 @@ function healPlayerHandler() {
 }
 
 function printLogHandler() {
-  console.log(battleLog);
   let i = 0;
   for (const log of battleLog) {
-    console.log(`#${i}`);
-    for (const key in log) {
-      console.log("key " + key);
-      console.log(key + " => " + log[key]);
+    if ((!lastLoggedEntry && lastLoggedEntry !== 0) || lastLoggedEntry < i) {
+      console.log(`#${i}`);
+      for (const key in log) {
+        console.log(key + ' => ' + log[key]);
+      }
+      lastLoggedEntry = i;
+      break;
     }
     i++;
   }
 }
 
-attackBtn.addEventListener("click", attackHandler);
-strongAttackBtn.addEventListener("click", strongAttackHandler);
-healBtn.addEventListener("click", healPlayerHandler);
-logBtn.addEventListener("click", printLogHandler);
+attackBtn.addEventListener('click', attackHandler);
+strongAttackBtn.addEventListener('click', strongAttackHandler);
+healBtn.addEventListener('click', healPlayerHandler);
+logBtn.addEventListener('click', printLogHandler);
