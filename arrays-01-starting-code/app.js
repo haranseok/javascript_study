@@ -75,13 +75,41 @@ testResults.splice(-3, -2);
 
 console.log(testResults.indexOf(1.5));
 
+console.log(testResults.includes(10.99)); // true
+
 // indexOf() - 해당 값과 일치하는 인덱스를 찾게 되면 뒤에 일치하는 다른 값이 있어고 첫 번째 요소만 찾고 종료된다.
 
 // lastIndexOf() - 오른쪽에서부터 인덱스를 찾을 때 사용
 
 //indexOf()와 lastIndexOf()의 중요한 점은 원시 값에 관해서는 실행이 되지만 참조 값에 관해서는 실행이 안된다.
-const personData = [{ name: "Max" }, { name: "Manuel" }];
+const personData = [{ name: 'Max' }, { name: 'Manuel' }];
 
-console.log(personData.indexOf({ name: "Manuel" })); // -1 === false
+console.log(personData.indexOf({ name: 'Manuel' })); // -1 === false
 
 //객체는 참조 값이므로 새 객체를 indexOf()로 보내면 indexOf의 모든 값과 personData의 모든 값을 비교하지만 두 객체는 비슷해보여도 절대 비슷하지 않다. indexOf는 객체가 있으면 실행되지 않는다.
+
+// indexOf()가 실행되지 않는 배열에서 객체 찾기
+// find() - 인수를 취하지만 다른 함수를 취하는 인수이다. / find 안에 익명 함수가 들어가는 데, 최대 3개의 인수를 넣을 수 있다. 첫 번째 인수는 배열의 단일 객체, 두 번째 인수는 단일 요소의 인덱스, 세 번째 인수는 언제나 전체 배열이 들어간다.
+
+// find()는 객체가 있는 배열에만 국한되지 않고, 모든 배열에서 사용가능하다.
+// find()는 찾으려고 하는 요소에 관해 true가 그렇지 않으면 fasle를 반환한다.
+const manuel = personData.find((person, idx, persons) => {
+  return person.name === 'Max';
+});
+
+console.log(manuel); // { name: 'Max' }
+
+manuel.name = 'Anna';
+
+// manuel.name = Anna로 변경 , personData에서도 Anna로 값이 변경된 것을 확인할 수 있다.
+// 동일한 객체의 동일한 참조 값으로 작업하고 있기 때문에 find()는 복사를 생성하지 않는 다.
+console.log(manuel, personData); // { name: 'Max' }
+
+// findIndex() 찾고자 하는 값의 index를 반환한다.
+const maxIndex = personData.findIndex((person, idx, persons) => {
+  return person.name === 'Max';
+});
+
+console.log(maxIndex); // 0
+
+// includes() - 배열의 일부인지 아닌지를 확인하는 유용한 메서드로 원시값에 관해 가장 유용한 메서드이다. indexOf() 처럼 값을 확인하기 때문. true / false 표시한다.
