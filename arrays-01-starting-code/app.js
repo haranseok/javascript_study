@@ -55,7 +55,11 @@
 //slice() - 새로운 배열을 반환하는 것으로 배열을 복사하는 가장 좋은 방법이다.
 
 const testResults = [1, 1.5, 5.3, 1.5, 10.99, -5, 10];
-const storedResults = testResults.slice();
+// const storedResults = testResults.slice();
+const storedResults = testResults.concat([3, 3.5]);
+
+console.log(storedResults);
+// concat 1개나 그 이상의 배열을 취해 storedResults 배열을 testResults 배열과 연결합니다. 새로운 중첩 배열로 추가하는 것은 아니다. concat은 배열의 데이터를 기존의 배열과 합칠 때 매우 유용하다.
 
 testResults.push(100);
 
@@ -68,3 +72,16 @@ testResults.splice(0, 2);
 testResults.splice(-3, -2);
 
 // 음수 인덱스를 사용할 수 있지만, 그러면 모두 음수 인덱스 여야 한다.
+
+console.log(testResults.indexOf(1.5));
+
+// indexOf() - 해당 값과 일치하는 인덱스를 찾게 되면 뒤에 일치하는 다른 값이 있어고 첫 번째 요소만 찾고 종료된다.
+
+// lastIndexOf() - 오른쪽에서부터 인덱스를 찾을 때 사용
+
+//indexOf()와 lastIndexOf()의 중요한 점은 원시 값에 관해서는 실행이 되지만 참조 값에 관해서는 실행이 안된다.
+const personData = [{ name: "Max" }, { name: "Manuel" }];
+
+console.log(personData.indexOf({ name: "Manuel" })); // -1 === false
+
+//객체는 참조 값이므로 새 객체를 indexOf()로 보내면 indexOf의 모든 값과 personData의 모든 값을 비교하지만 두 객체는 비슷해보여도 절대 비슷하지 않다. indexOf는 객체가 있으면 실행되지 않는다.
