@@ -82,9 +82,9 @@ console.log(testResults.includes(10.99)); // true
 // lastIndexOf() - 오른쪽에서부터 인덱스를 찾을 때 사용
 
 //indexOf()와 lastIndexOf()의 중요한 점은 원시 값에 관해서는 실행이 되지만 참조 값에 관해서는 실행이 안된다.
-const personData = [{ name: 'Max' }, { name: 'Manuel' }];
+const personData = [{ name: "Max" }, { name: "Manuel" }];
 
-console.log(personData.indexOf({ name: 'Manuel' })); // -1 === false
+console.log(personData.indexOf({ name: "Manuel" })); // -1 === false
 
 //객체는 참조 값이므로 새 객체를 indexOf()로 보내면 indexOf의 모든 값과 personData의 모든 값을 비교하지만 두 객체는 비슷해보여도 절대 비슷하지 않다. indexOf는 객체가 있으면 실행되지 않는다.
 
@@ -94,12 +94,12 @@ console.log(personData.indexOf({ name: 'Manuel' })); // -1 === false
 // find()는 객체가 있는 배열에만 국한되지 않고, 모든 배열에서 사용가능하다.
 // find()는 찾으려고 하는 요소에 관해 true가 그렇지 않으면 fasle를 반환한다.
 const manuel = personData.find((person, idx, persons) => {
-  return person.name === 'Max';
+  return person.name === "Max";
 });
 
 console.log(manuel); // { name: 'Max' }
 
-manuel.name = 'Anna';
+manuel.name = "Anna";
 
 // manuel.name = Anna로 변경 , personData에서도 Anna로 값이 변경된 것을 확인할 수 있다.
 // 동일한 객체의 동일한 참조 값으로 작업하고 있기 때문에 find()는 복사를 생성하지 않는 다.
@@ -107,9 +107,36 @@ console.log(manuel, personData); // { name: 'Max' }
 
 // findIndex() 찾고자 하는 값의 index를 반환한다.
 const maxIndex = personData.findIndex((person, idx, persons) => {
-  return person.name === 'Max';
+  return person.name === "Max";
 });
 
 console.log(maxIndex); // 0
 
 // includes() - 배열의 일부인지 아닌지를 확인하는 유용한 메서드로 원시값에 관해 가장 유용한 메서드이다. indexOf() 처럼 값을 확인하기 때문. true / false 표시한다.
+
+// forEach()
+// find()와 finedIndex() 처럼 함수를 취한다. 최대 3개의 인수를 취합니다.
+// index에 쉽게 엑세스할 수 있는 for of 반목문의 대안으로
+
+// const prices = [10.99, 5.99, 3.99, 6.59];
+// const tax = 0.19;
+// const taxAdustedPrices = [];
+
+// prices.forEach((price, idx, prices) => {
+//   const priceObj = { index: idx, taxAdustedPrice: price * (1 + tax) };
+//   taxAdustedPrices.push(priceObj);
+// });
+
+// console.log(taxAdustedPrices);
+
+// map() - forEach() 대신 배열에서 사용 가능한 특별한 메서드
+// map은 배열을 취하고 모든 항목에 함수를 실행한다.
+const prices = [10.99, 5.99, 3.99, 6.59];
+const tax = 0.19;
+
+const taxAdustedPrices = prices.map((price, idx, prices) => {
+  const priceObj = { index: idx, taxAdustedPrice: price * (1 + tax) };
+  return priceObj;
+});
+
+console.log(taxAdustedPrices);
