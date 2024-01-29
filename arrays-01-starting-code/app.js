@@ -142,3 +142,68 @@ const taxAdustedPrices = prices.map((price, idx, prices) => {
 console.log(taxAdustedPrices);
 
 console.log('test');
+// sort() 메서드
+/**
+ * 배열을 정렬할 수 있다.
+ * 문자열 논리로 정렬한다. ( 문자열은 기본적으로 첫 번째 문자열만 비교 ex. 10 > 3 이 아닌 '10' > '3' 이어서 1과 3을 비교한다.)
+ * **/
+
+// const sortedPrices = prices.sort(); // 이 형식으로 하게 되면 [10.99, 3.99, 5.99, 6.59] 이렇게 출력된다.
+
+const sortedPrices = prices.sort((a, b) => {
+  if (a > b) {
+    // 양수인 1을 반환
+    return 1;
+  } else if (a === b) {
+    // 동일하면 0
+    return 0;
+  } else {
+    return -1; // b가 더 크면 -1
+  }
+});
+
+console.log(sortedPrices.reverse());
+
+// reverse() // 배열을 반전한다.
+
+// filter()
+
+// const filteredArray = prices.filter((price, index, prices) => {
+//   return price > 6; // true or false
+// });
+
+// console.log(filteredArray);
+
+// 화살표 함수의 장점
+/**
+ * 코드를 정말 짧게 작성할 수 있다.
+ * 인수가 1개인 경우엔 괄호와 중괄호를 삭제할 수 있다.
+ * return 문을 삭제하고 세밐콜론까지 삭제할 수 있다.
+ * **/
+
+const filteredArray = prices.filter(price => price > 6);
+
+// reduce() 메서드 ( 중요 )
+
+/**
+ * 배열 안에 있는 값을 더할 때 사용할 수 있다.
+ * 아래와 같이 forEach를 사용할 수 있지만, reduce를 사용하면 더 간단하게 코드를 작성할 수 있다.
+ *
+ * reduce 메서드는 배열에서 사용 가능한 빌드인 메서드로 함수를 취한다. 여러 개의 인수를 취한다.
+ * 배열을 더 단순한 값으로 줄이는 것으로 주로 배열을 단일 숫자나, 단일 문자열로 줄인다.
+ * **/
+
+let sum = 0;
+
+prices.forEach(price => {
+  sum += price;
+});
+
+console.log(sum); //27.560000000000002
+
+// curIndex, prices 는 잘 사용하지 않는 인수
+// reduce의 두 번째 인수는 시작하려는 초기 값이다. prevValue 가 초기 값으로 설정하지 않으면 undefind가 된다. 현재 코드에서는 0으로 설정되어있다.
+
+const sum2 = prices.reduce((prevValue, curValue, curIndex, prices) => {
+  return prevValue + curValue;
+}, 0);
