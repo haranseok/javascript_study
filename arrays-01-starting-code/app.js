@@ -82,9 +82,9 @@ console.log(testResults.includes(10.99)); // true
 // lastIndexOf() - 오른쪽에서부터 인덱스를 찾을 때 사용
 
 //indexOf()와 lastIndexOf()의 중요한 점은 원시 값에 관해서는 실행이 되지만 참조 값에 관해서는 실행이 안된다.
-const personData = [{ name: 'Max' }, { name: 'Manuel' }];
+const personData = [{ name: "Max" }, { name: "Manuel" }];
 
-console.log(personData.indexOf({ name: 'Manuel' })); // -1 === false
+console.log(personData.indexOf({ name: "Manuel" })); // -1 === false
 
 //객체는 참조 값이므로 새 객체를 indexOf()로 보내면 indexOf의 모든 값과 personData의 모든 값을 비교하지만 두 객체는 비슷해보여도 절대 비슷하지 않다. indexOf는 객체가 있으면 실행되지 않는다.
 
@@ -94,12 +94,12 @@ console.log(personData.indexOf({ name: 'Manuel' })); // -1 === false
 // find()는 객체가 있는 배열에만 국한되지 않고, 모든 배열에서 사용가능하다.
 // find()는 찾으려고 하는 요소에 관해 true가 그렇지 않으면 fasle를 반환한다.
 const manuel = personData.find((person, idx, persons) => {
-  return person.name === 'Max';
+  return person.name === "Max";
 });
 
 console.log(manuel); // { name: 'Max' }
 
-manuel.name = 'Anna';
+manuel.name = "Anna";
 
 // manuel.name = Anna로 변경 , personData에서도 Anna로 값이 변경된 것을 확인할 수 있다.
 // 동일한 객체의 동일한 참조 값으로 작업하고 있기 때문에 find()는 복사를 생성하지 않는 다.
@@ -107,7 +107,7 @@ console.log(manuel, personData); // { name: 'Max' }
 
 // findIndex() 찾고자 하는 값의 index를 반환한다.
 const maxIndex = personData.findIndex((person, idx, persons) => {
-  return person.name === 'Max';
+  return person.name === "Max";
 });
 
 console.log(maxIndex); // 0
@@ -141,7 +141,7 @@ const taxAdustedPrices = prices.map((price, idx, prices) => {
 
 console.log(taxAdustedPrices);
 
-console.log('test');
+console.log("test");
 // sort() 메서드
 /**
  * 배열을 정렬할 수 있다.
@@ -181,7 +181,7 @@ console.log(sortedPrices.reverse());
  * return 문을 삭제하고 세밐콜론까지 삭제할 수 있다.
  * **/
 
-const filteredArray = prices.filter(price => price > 6);
+const filteredArray = prices.filter((price) => price > 6);
 
 // reduce() 메서드 ( 중요 )
 
@@ -195,7 +195,7 @@ const filteredArray = prices.filter(price => price > 6);
 
 let sum = 0;
 
-prices.forEach(price => {
+prices.forEach((price) => {
   sum += price;
 });
 
@@ -207,3 +207,45 @@ console.log(sum); //27.560000000000002
 const sum2 = prices.reduce((prevValue, curValue, curIndex, prices) => {
   return prevValue + curValue;
 }, 0);
+
+const data = "new york; 10.99; 2000";
+const transformedData = data.split(";"); // 문자열 자르기
+console.log(transformedData);
+
+const nameFragments = ["Max", "Schwarz"];
+const name = nameFragments.join(" "); // 배열 합치기 -> 문자열로 반환
+console.log(name);
+
+/** 전개 구문 (...)
+ * 연산자가 아니고 결국에는 배열의 모든 요소를 꺼내 개별 요소의 리스트로 반환하여 준다.
+ * ...nameFagments
+ * 2. 전개 구문을 단순히 복사할 때만 사용하지는 않는 다.
+ * **/
+
+// nameFragments의 모든 요소를 꺼내 새로 만들어진 빈 배열에 개별 요소로 추가한다.
+const copiedNameFragments = [...nameFragments];
+
+console.log(nameFragments, copiedNameFragments); // 똑같은 내용의 두개의 배열이 생긴다.
+
+nameFragments.push("Mr.");
+// 추가해도 copiedNameFragments에는 변경되지 않음. 복사본이면서 새로운 배열이기 때문이다.
+
+// 2. 배열의 모든 요소를 꺼내 ,로 구분된 요소의 리스트를 만들 수 있다. 개별 값의 리스트를 요구하는 어떤 함수나 메서드를 사용할 경우에 전개 구문이 유용하다.
+
+console.log(Math.min(...prices));
+
+// 객체 복사
+
+const persons = [
+  { name: "Max", age: 30 },
+  { name: "Manuel", age: 31 },
+];
+
+const copiedPersons = [...persons]; // 새로운 배열을 만들었다. 주소복사
+const copiedPersons2 = [
+  ...persons.map((person) => ({ name: person.name, age: person.age })),
+]; // 새로운 객체를 만들고, 새로운 배열을 만든다. 이렇게 map 메서드를 사용하면 객체도 같이 새롭게 생성되어 원본을 수정해도 복사본에는 영향을 주지 않는다. {} 은 자바스크립트에 객체임을 알려주기 위해 사용.
+
+persons.push({ name: "Anna", age: 29 }); // copied의 값은 변경되지 않음
+persons[0].age = 31; // 새로운 객체를 만든 것이 아니기 때문에 copied의 값도 변경된다.
+console.log(persons, copiedPersons);
