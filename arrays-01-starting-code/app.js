@@ -257,9 +257,11 @@ const nameData = ['Max', 'Schwarz', 'Mr', 30];
  * const fristName = nameData[0]
  * const lastName = nameData[1]
  *
- * 더 많은 내용의 배열의 경우에는 Rest 연산자를 사용할 수 있다. 배열에 있는 모든 요소를 수집하여 새로운 변수에 저장한다.
+ * 더 많은 내용의 배열의 경우에는 Rest 연산자를 사용할 수 있다. 배열에 있는 모든 요소를 수집하여 새로운 변수에 저장한다. // otherInfomaion 배열
  */
 
 const [fristName, lastName, ...otherInfomaion] = nameData;
 
 console.log(fristName, lastName, otherInfomaion);
+
+// Maps , Sets
