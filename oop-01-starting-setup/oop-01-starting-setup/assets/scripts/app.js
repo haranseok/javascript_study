@@ -125,15 +125,19 @@ class ProductItem extends Component {
 
 class ProductList extends Component {
   // super가 실생되기 전에 어떤 = 어떤을 입력하면 안된다.
-  poroducts = [];
+  // 현재 클래스 내부에서만 사용되거나 또는 클래스 기반으로 생성된 객체 내에서만 사용된다. 객체의 외부에서 사용되지 않는다.
+
+  //Private #기호를 붙여서 사용하고 클래스 내부에서만 동작해야하고, 사용해야하는 프로퍼티가 있을 때 Private 메서드를 사용하면 좋다.
+  #poroducts = [];
 
   constructor(renderHookId) {
-    super(renderHookId);
-    this.fetchProducts();
+    super(renderHookId, false);
+    this.render();
+    this.#fetchProducts();
   }
 
-  fetchProducts() {
-    this.poroducts = [
+  #fetchProducts() {
+    this.#poroducts = [
       new Product(
         "A Pillow",
         "https://fastly.picsum.photos/id/240/200/300.jpg?blur=5&hmac=UDFJH4m-QKTtSXWzQ0e4-5wAlhTut6kOBmgTqRMFgt8",
@@ -151,7 +155,7 @@ class ProductList extends Component {
   }
 
   renderProducts() {
-    for (const prod of this.poroducts) {
+    for (const prod of this.#poroducts) {
       new ProductItem(prod, "prod-list");
     }
   }
@@ -160,7 +164,7 @@ class ProductList extends Component {
     this.createRootElement("ul", "product-list", [
       new ElementAttribute("id", "prod-list"),
     ]);
-    if (this.poroducts && this.poroducts.length > 0) {
+    if (this.#poroducts && this.#poroducts.length > 0) {
       this.renderProducts();
     }
   }
