@@ -63,5 +63,32 @@ function createTaxCalculator(tax) {
 const calculateVatAmount = createTaxCalculator(0.19);
 const calculateIncomeTaxAmount = createTaxCalculator(0.25);
 
-console.log(calculateIncomeTaxAmount(100));
+console.log(calculateIncomeTaxAmount(100)); // 실행될때 내부 함수인 calculateTax가 새롭게 만들어진다.
 console.log(calculateIncomeTaxAmount(200));
+
+/** 클로저 매우 중요
+ * 모든 함수는 클로저이다. 왜냐하면 환병에 정의된 변수가 닫혀있고 이것을 기억하기 때문이다. 주변 맥락에서 더는 필요하지 않더라도 어딘가로 버려지지 않는다.
+ * 주변 함수를 등록하고 거기에 변수를 등록하고 해당 변수의 값을 기억한다. 변수를 바꾸면 함수 내부에 반영되지만 변수를 바꾸지 않는 다면 함수는 변하지 않는다.
+ *
+ *
+ * 렉시컬 환경 (scope)
+ * 각 함수는 자체 렉시컬 환경을 가지고 전역 환경을 가진다.
+ * 변수와 상수는 다른 환경에 등록되어 있다고 볼 수 있다.
+ *
+ * 함수가 만들어질 때 새로운 렉시컬 환경을 만든다. createTaxCalculator 함수를 보면 tax라는 매개변수를 렉시컬 환경의 변수로 등록한다. 내부 함수도 자제 렉시컬 환경을 갖는 데 그게 바로 amount라는 매개변수이다.
+ * 또 한, 외부 함수의 환경에 접근할 수 있다.createTaxCalculator를 호출할 때 내부 함수( calculateTax )가 만들어진다.
+ *
+ * **/
+
+// 클로저
+
+let userName = "Max";
+
+function greetUser() {
+  let name = userName;
+  console.log("Hi " + name);
+}
+
+userName = "Manuel";
+
+greetUser();
