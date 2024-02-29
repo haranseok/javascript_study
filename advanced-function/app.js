@@ -92,3 +92,75 @@ function greetUser() {
 userName = "Manuel";
 
 greetUser();
+
+/** 332 재귀 함수
+ * 함수가 자체적으로 호출한다.
+ *
+ * **/
+
+function powerOf(x, n) {
+  let result = 1;
+
+  for (let i = 0; i < n; i++) {
+    result *= x;
+  }
+  return result;
+}
+
+console.log(powerOf(2, 3)); // 2*2*2 2의 3제곱
+
+// 재귀 함수
+
+function powerOf2(x, n) {
+  //   if (n === 1) {
+  //     return x;
+  //   }
+  //   return x * powerOf2(x, n - 1);
+
+  return n === 1 ? x : x * powerOf2(x, n - 1);
+}
+
+console.log(powerOf2(2, 3)); // 2*2*2 2의 3제곱
+
+// 재귀 함수 고급 - 메뉴의 하위메뉴 구성할 때 사용할 수 있을 듯
+
+const mySelf = {
+  name: "Max",
+  friends: [
+    {
+      name: "Manuel",
+      friends: [
+        {
+          name: "Chris",
+          friends: [
+            {
+              name: "Mari",
+            },
+            {
+              name: "Anna",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "Julia",
+    },
+  ],
+};
+
+function getFriendNames(person) {
+  const collectedNames = [];
+
+  if (!person.friends) {
+    return [];
+  }
+
+  for (const friend of person.friends) {
+    collectedNames.push(friend.name);
+    collectedNames.push(...getFriendNames(friend));
+  }
+  return collectedNames;
+}
+
+console.log(getFriendNames(mySelf));
