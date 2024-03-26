@@ -34,3 +34,20 @@ console.log(productOutput);
  *  5. 예를 들어 숫자인 price를 category로 인코딩할 때에 사용한 것과 같이 복잡한 논리가 있을 때에는 삼항식을 사용하는 것 보다 태그드 템플릿 함수를 이용하는 것이 더 유용하다.
  *  6. 꼭 태그드 템플릿은 문자열로만 출력하지 않고, 객체의 형태로 출력해도 오류없이 정상적으로 작동한다.
  */
+
+//regex
+
+const userInput = 'testtest.com';
+
+// includes 배열의 항목에 특정 값이 포함되어 있는 지를 판단하여 true, false 값으로 반환
+console.log(userInput.includes('@'));
+
+const regex = /^\S+@\S+\.\S+$/; // 간단한 이메일 정규식
+
+console.log(regex.test(userInput));
+console.log(regex.test('test@test.com'));
+
+const emailRegex = /^\S+@\S+\./; // \. => 모든 문자를 찾는 게 아니고 .표시가 포함된 단어만 찾는 다는 의미 \S 모든 단어를 찾는 다는 것을 의미.
+// const regex = /jello/;
+// regex.exc('찾으려는 내용') > 패턴과 문자열이 어느 위치에서부터 일치하는 지 알아볼 수 있다.
+// 'hi jello'.match(regex) > 패턴과 문자열이 어느 위치에서부터 일치하는 지 알아볼 수 있는 두번째 방법.
