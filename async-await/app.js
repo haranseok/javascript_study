@@ -1,58 +1,74 @@
-const button = document.querySelector("button");
-const p = document.querySelector("p");
+const button = document.querySelector('button');
+const p = document.querySelector('p');
 
-// promise
+// Promise > async , await
 
-const getPosition = (option) => {
+const getPosition = option => {
   const promise = new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
-      (success) => {
+      success => {
         resolve(success);
       },
-      (error) => {},
+      error => {
+        reject(error);
+      },
       option
     );
   });
   return promise;
 };
 
-const setTimer = (duration) => {
+const setTimer = duration => {
   const promise = new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve("Done!"); // 함수
+      resolve('Done!');
     }, duration);
   });
   return promise;
 };
 
-function trackUserHandler() {
-  console.log("clicked!");
-  // promise 체이닝 - 단계 안의 단계가 아니라 다음 단계로 만들어주어 콜백 지옥에서 벗어날 수 있다.
-  let positionData;
-  getPosition()
-    .then((posData) => {
-      positionData = posData;
-      return setTimer(2000);
-    })
-    .then((data) => {
-      console.log(data, positionData);
-    }); // 사용자의 위치 추적 - 허용여부 확인하는 팝업창이 뜸.
+// async - 함수의 모든 내용을 하나의 큰 프로미스로 묶는다. Promise로 작성했던 것들을 async await으로 리팩토링하면서 더 간결하게 사용할 수 있다. 실행이 완료될 때까지 대기하는 것으로 보이나, 실제로는 js에서 await부분에서 then처리되어 작동되고 있다.
+async function trackUserHandler() {
+  //   let positionData;
+  // 오류 처리
+  let posData;
+  let timerData;
+  try {
+    posData = await getPosition();
+    timerData = await setTimer(2000);
+  } catch (error) {
+    error;
+  }
+  console.log(timerData, posData);
+
+  // promise로 작성했을 때는 아래의 로직이 출력된 다음에 위에 로직이 실행되었는 데, async, await 구문은 위에 로직이 실행된 다음에 아래의 로직이 실행된다. 그 이유는 await 때문이다.
+  // await은 코드 실행을 일시 중지하는 것이 아니라 내부적으로 위에 모든 단계들을 자체 then 블록으로 감싼다. 그래서 아래 코드 부분도 자체 then 블록을 가지게 되고, 위에 코드 부분이 완료되어야 실행된다.
+  // 그래서 async, await 부분은 동시에 여러 작업을 실행하거나, 시작해야 하는 함수가 있거나 차례로 실행하고 싶지 않은 경우에는 좋지 않다.
   setTimer(1000).then(() => {
-    console.log("Timer done!");
+    console.log('Timer done!');
   });
-
-  // 타이머를 0으로 설정해도 Getting position이 콘솔창에 먼저 출력된다.
-  // 왜냐하면 타이머를 브라우저에 넘긴 후 콜백 함수를 실행하기 위애서는 매번 메세지 대기열과 이벤트 루프에 대한 경로를 찾기 때문이다. setTimeout에 설정된 시간 0은 0초로 바로 실행된다는 보장된 시간이 아닌 최소 시간이라는 것을 인지해야 한다.
-  console.log("Getting position...");
-  // clicked > Getting... > Done > posData 순으로 콘솔창에 출력
+  console.log('Getting position...');
 }
-button.addEventListener("click", trackUserHandler); // 비동기 테스크
+button.addEventListener('click', trackUserHandler);
 
-// 이벤트가 발생할 때까지 다음 코드의 실행을 차단하지 않고, 아래 for문을 동작시킨다. 그리고 버튼을 클릭해도 console.log에 result가 실행되고 난 이후에 clicked라는 값이 출력된다.
+// race 메서드는 프로미스 배열을 받는다. 그리고 race는 가장 빠른 프로미스만 고려하기 때문에 배열로 들어간 promise 중에서 제일 빠른 값만 반환하고 다른 값은 catch로 반환된다.
+// Promise.race([getPosition(), setTimer(1000)])
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
 
-// let result = 0;
-// for (let i = 0; i < 10000000; i++) {
-//   result += i;
-// }
+// // 몇가지 promise가 완료된 후에만 실행되어야 하는 코드
+// // 순서대로 각 프로미스에 의해 반환된 데이터를 가지는 배열, 하나가 취소되면 다 취소된다.
+// Promise.all([getPosition(), setTimer(1000)]).then(data => {
+//   console.log(data);
+// });
 
-// console.log(result);
+// Promise가 한 일을 설명하는 객체
+// Promise 중 하나가 실패해도 멈추지 않고 다음 작업도 진행을 한다.
+// 모든 Promise가 끝날 때까지 기다리고 자세한 보고서를 얻을 수 있음.
+Promise.allSettled([getPosition(), setTimer(1000)]).then(data => {
+  console.log(data);
+});
