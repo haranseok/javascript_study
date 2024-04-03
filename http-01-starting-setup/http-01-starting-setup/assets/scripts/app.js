@@ -1,8 +1,8 @@
-const listElement = document.querySelector('.posts');
-const postTemplate = document.getElementById('single-post');
-const form = document.querySelector('#new-post form');
-const fetchButton = document.querySelector('#available-posts button');
-const postList = document.querySelector('ul');
+const listElement = document.querySelector(".posts");
+const postTemplate = document.getElementById("single-post");
+const form = document.querySelector("#new-post form");
+const fetchButton = document.querySelector("#available-posts button");
+const postList = document.querySelector("ul");
 
 const sendHttpRequest = (method, url, data) => {
   // const promise = new Promise((resolve, reject) => {
@@ -30,9 +30,26 @@ const sendHttpRequest = (method, url, data) => {
   return fetch(url, {
     method: method,
     body: JSON.stringify(data),
-  }).then(responese => {
-    return responese.json(); // 데이터 파싱
-  }); // url만 입력하면 get 요청 전송
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((responese) => {
+      if (responese.status >= 200 && responese.status < 300) {
+        return responese.json(); // 데이터 파싱
+      } else {
+        // 외부 promise 체인에는 아무런 문제가 없어서 아래 catch가 진행되고, 안에 있는 promise 체인이 작동
+        // 내부 promise 체인에 return을 걸어주면 외부 promise 체인과 병합 또는 연결된 상태가 된다.
+        return responese.json().then((errData) => {
+          console.log(errData);
+          throw new Error("Something went wrong!");
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      throw new Error("Something went wrong!");
+    }); // url만 입력하면 get 요청 전송
 
   /** XMLHttpRequest를 이용한 접근 방법과는 다르게 fetch 함수는 xhr.response 처럼 파싱된 응답이 아닌 스트리밍된 응답을 반환한다.
    *
@@ -40,22 +57,22 @@ const sendHttpRequest = (method, url, data) => {
 };
 
 const fetchPosts = async () => {
-  // try {
-  const responseData = await sendHttpRequest(
-    'GET',
-    'https://jsonplaceholder.typicode.com/posts'
-  );
-  const listOfPosts = responseData;
-  for (const post of listOfPosts) {
-    const postEl = document.importNode(postTemplate.content, true);
-    postEl.querySelector('h2').textContent = post.title.toUpperCase();
-    postEl.querySelector('p').textContent = post.body;
-    postEl.querySelector('li').id = post.id;
-    listElement.append(postEl);
+  try {
+    const responseData = await sendHttpRequest(
+      "GET",
+      "https://jsonplaceholder.typicode.com/posts"
+    );
+    const listOfPosts = responseData;
+    for (const post of listOfPosts) {
+      const postEl = document.importNode(postTemplate.content, true);
+      postEl.querySelector("h2").textContent = post.title.toUpperCase();
+      postEl.querySelector("p").textContent = post.body;
+      postEl.querySelector("li").id = post.id;
+      listElement.append(postEl);
+    }
+  } catch (err) {
+    alert(err.message);
   }
-  // } catch (err) {
-  //  alert(err.message);
-  // }
 };
 
 const createPost = async (title, content) => {
@@ -66,15 +83,15 @@ const createPost = async (title, content) => {
     userId: userId,
   };
 
-  sendHttpRequest('POST', 'https://jsonplaceholder.typicode.com/posts', post);
+  sendHttpRequest("POST", "https://jsonplaceholder.typicode.com/posts", post);
 };
 
-fetchButton.addEventListener('click', fetchPosts);
+fetchButton.addEventListener("click", fetchPosts);
 
-form.addEventListener('submit', event => {
+form.addEventListener("submit", (event) => {
   event.preventDefault();
-  const enteredTitle = event.currentTarget.querySelector('#title').value;
-  const enteredContent = event.currentTarget.querySelector('#content').value;
+  const enteredTitle = event.currentTarget.querySelector("#title").value;
+  const enteredContent = event.currentTarget.querySelector("#content").value;
 
   createPost(enteredTitle, enteredContent);
 });
@@ -89,11 +106,11 @@ form.addEventListener('submit', event => {
  *  두번째 인자 : boolean 값으로 true는 자식 노드 포함, false는 자식 노드 불포함
  */
 
-postList.addEventListener('click', event => {
-  if (event.target.tagName === 'BUTTON') {
-    const postId = event.target.closest('li').id; // 가장 가까운 list item의 id
+postList.addEventListener("click", (event) => {
+  if (event.target.tagName === "BUTTON") {
+    const postId = event.target.closest("li").id; // 가장 가까운 list item의 id
     sendHttpRequest(
-      'DELETE',
+      "DELETE",
       `https://jsonplaceholder.typicode.com/posts/${postId}`
     );
   }
@@ -107,4 +124,9 @@ postList.addEventListener('click', event => {
 
 /** 378 - fetch API
  *  fetch는 기본적으로 프로미스 기반 함수이다. 그래서 별도의 프로미스를 지정할 필요없이 자체적으로 프로미스를 사용하는 API이다.
+ */
+
+/** 382 - XMLHttpRequest vs fetch()
+ *  fetch API의 장점은 사용하기 쉽고 프로미스를 적극적으로 사용한다는 점이고 단범은 오류 처리 작업이 번거롭다는 점이 있다.
+ *
  */
