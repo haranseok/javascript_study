@@ -92,7 +92,7 @@ button:active {
 }
 
 .droppable {
-  background-color: #ffe0ec;
+  background: #ffe0ec;
 }
 
 #active-projects {

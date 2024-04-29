@@ -1,8 +1,8 @@
-const listElement = document.querySelector(".posts");
-const postTemplate = document.getElementById("single-post");
-const form = document.querySelector("#new-post form");
-const fetchButton = document.querySelector("#available-posts button");
-const postList = document.querySelector("ul");
+const listElement = document.querySelector('.posts');
+const postTemplate = document.getElementById('single-post');
+const form = document.querySelector('#new-post form');
+const fetchButton = document.querySelector('#available-posts button');
+const postList = document.querySelector('ul');
 
 const sendHttpRequest = (method, url, data) => {
   // const promise = new Promise((resolve, reject) => {
@@ -29,26 +29,27 @@ const sendHttpRequest = (method, url, data) => {
 
   return fetch(url, {
     method: method,
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    // body: JSON.stringify(data),
+    body: data,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   })
-    .then((responese) => {
+    .then(responese => {
       if (responese.status >= 200 && responese.status < 300) {
         return responese.json(); // 데이터 파싱
       } else {
         // 외부 promise 체인에는 아무런 문제가 없어서 아래 catch가 진행되고, 안에 있는 promise 체인이 작동
         // 내부 promise 체인에 return을 걸어주면 외부 promise 체인과 병합 또는 연결된 상태가 된다.
-        return responese.json().then((errData) => {
+        return responese.json().then(errData => {
           console.log(errData);
-          throw new Error("Something went wrong!");
+          throw new Error('Something went wrong!');
         });
       }
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
-      throw new Error("Something went wrong!");
+      throw new Error('Something went wrong!');
     }); // url만 입력하면 get 요청 전송
 
   /** XMLHttpRequest를 이용한 접근 방법과는 다르게 fetch 함수는 xhr.response 처럼 파싱된 응답이 아닌 스트리밍된 응답을 반환한다.
@@ -59,15 +60,15 @@ const sendHttpRequest = (method, url, data) => {
 const fetchPosts = async () => {
   try {
     const responseData = await sendHttpRequest(
-      "GET",
-      "https://jsonplaceholder.typicode.com/posts"
+      'GET',
+      'https://jsonplaceholder.typicode.com/posts'
     );
     const listOfPosts = responseData;
     for (const post of listOfPosts) {
       const postEl = document.importNode(postTemplate.content, true);
-      postEl.querySelector("h2").textContent = post.title.toUpperCase();
-      postEl.querySelector("p").textContent = post.body;
-      postEl.querySelector("li").id = post.id;
+      postEl.querySelector('h2').textContent = post.title.toUpperCase();
+      postEl.querySelector('p').textContent = post.body;
+      postEl.querySelector('li').id = post.id;
       listElement.append(postEl);
     }
   } catch (err) {
@@ -83,15 +84,21 @@ const createPost = async (title, content) => {
     userId: userId,
   };
 
-  sendHttpRequest("POST", "https://jsonplaceholder.typicode.com/posts", post);
+  const fd = new FormData(form); // form 요소를 바로 넣을 수 있다. html 파일에 input 또는 textarea에 name을 입력해주면 아래 주석 처리한 부분의 내용이 FormData 객체로 전달된다.
+
+  // fd.append('title', title);
+  // fd.append('body', content);
+  fd.append('userId', userId);
+
+  sendHttpRequest('POST', 'https://jsonplaceholder.typicode.com/posts', fd);
 };
 
-fetchButton.addEventListener("click", fetchPosts);
+fetchButton.addEventListener('click', fetchPosts);
 
-form.addEventListener("submit", (event) => {
+form.addEventListener('submit', event => {
   event.preventDefault();
-  const enteredTitle = event.currentTarget.querySelector("#title").value;
-  const enteredContent = event.currentTarget.querySelector("#content").value;
+  const enteredTitle = event.currentTarget.querySelector('#title').value;
+  const enteredContent = event.currentTarget.querySelector('#content').value;
 
   createPost(enteredTitle, enteredContent);
 });
@@ -106,11 +113,11 @@ form.addEventListener("submit", (event) => {
  *  두번째 인자 : boolean 값으로 true는 자식 노드 포함, false는 자식 노드 불포함
  */
 
-postList.addEventListener("click", (event) => {
-  if (event.target.tagName === "BUTTON") {
-    const postId = event.target.closest("li").id; // 가장 가까운 list item의 id
+postList.addEventListener('click', event => {
+  if (event.target.tagName === 'BUTTON') {
+    const postId = event.target.closest('li').id; // 가장 가까운 list item의 id
     sendHttpRequest(
-      "DELETE",
+      'DELETE',
       `https://jsonplaceholder.typicode.com/posts/${postId}`
     );
   }
