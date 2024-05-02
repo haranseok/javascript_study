@@ -1,6 +1,6 @@
-import { Component } from './Component.js';
+import Cmp, { doSomething } from './Component.js'; // 무명 내보내기로 Component.js가 구현되어있는 경우 {기명 내보내기 : default로 내보내기가 처리되어 있지 않은 경우}
 
-export class Tooltip extends Component {
+export class Tooltip extends Cmp {
   constructor(closeNotifierFunction, text, hostElementId) {
     super(hostElementId);
     this.closeNotifier = closeNotifierFunction;

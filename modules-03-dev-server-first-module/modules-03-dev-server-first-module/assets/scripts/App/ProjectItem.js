@@ -1,6 +1,6 @@
 import { DOMHelper } from '../Utility/DOMHelper.js';
-import { Tooltip } from './Tooltip.js';
-
+// import { Tooltip } from './Tooltip.js';
+// tooltip과 같이 처음 시작과 동시에 필요하지 않은 데이터일 경우에는 굳이 처음에 콜하시 않고 필요한 경우에 호출하도록 하는 것이 앱이 더 빠르고 잘 반응할 수 있도록 해준다.
 export class ProjectItem {
   hasActiveTooltip = false;
 
@@ -18,14 +18,17 @@ export class ProjectItem {
     }
     const projectElement = document.getElementById(this.id);
     const tooltipText = projectElement.dataset.extraInfo;
-    const tooltip = new Tooltip(
-      () => {
-        this.hasActiveTooltip = false;
-      },
-      tooltipText,
-      this.id
-    );
-    tooltip.attach();
+    // tooltip이 필요한 경우에 호출하는 방법 - 동적  import
+    import('./Tooltip.js').then(module => {
+      const tooltip = new module.Tooltip(
+        () => {
+          this.hasActiveTooltip = false;
+        },
+        tooltipText,
+        this.id
+      );
+      tooltip.attach();
+    });
     this.hasActiveTooltip = true;
   }
 
